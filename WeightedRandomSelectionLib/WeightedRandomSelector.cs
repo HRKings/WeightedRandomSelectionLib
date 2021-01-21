@@ -32,7 +32,7 @@ namespace WeightedRandomSelectorLib
         /// </summary>
         private bool _forceRecalculation;
 
-        SelectorEngine<T> selector;
+        private readonly SelectorEngine<T> selector;
 
         /// <summary>
         /// Creates a instance of the selector with the desired options
@@ -157,13 +157,12 @@ namespace WeightedRandomSelectorLib
         public int[] GetCumulativeWeights(List<WeightedItem<T>> items)
         {
             int currentWeight = 0;
-            int roundedWeight = 0;
             int index = 0;
             int[] result = new int[items.Count];
 
             foreach (WeightedItem<T> item in items)
             {
-                roundedWeight = (int)(item.Weight * IntegerFactor);
+                int roundedWeight = (int)(item.Weight * IntegerFactor);
                 currentWeight += roundedWeight;
                 this.TotalCumulativeWeight += roundedWeight;
 
