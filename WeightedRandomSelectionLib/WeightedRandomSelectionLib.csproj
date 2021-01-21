@@ -1,7 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+		<TargetFrameworks>net5.0</TargetFrameworks>
+		<Authors>HRKings</Authors>
+		<Company>Rhaizzing</Company>
+		<Product>Rhaizzing Utils</Product>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	</PropertyGroup>
 
 </Project>
