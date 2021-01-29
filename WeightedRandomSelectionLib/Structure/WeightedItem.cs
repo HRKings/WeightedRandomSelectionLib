@@ -22,5 +22,16 @@
             this.Weight = weight;
             this.Value = value;
         }
+
+        /// <summary>
+        /// Splits the item into a (T, double) tuple
+        /// </summary>
+        /// <param name="value">The actual item value</param>
+        /// <param name="weight">The weight it has</param>
+        public void Deconstruct(out T value, out double weight)
+        {
+            weight = this.Weight;
+            value = this.Value;
+        }
     }
 }

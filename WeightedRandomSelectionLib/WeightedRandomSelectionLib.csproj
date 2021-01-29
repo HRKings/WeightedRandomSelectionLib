@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net5.0</TargetFrameworks>
+		<TargetFramework>net5.0</TargetFramework>
 		<Authors>HRKings</Authors>
 		<Company>Rhaizzing</Company>
 		<Product>Rhaizzing Utils</Product>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	</PropertyGroup>
 
 </Project>
