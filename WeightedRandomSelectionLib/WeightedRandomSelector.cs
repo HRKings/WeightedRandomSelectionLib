@@ -126,6 +126,15 @@ namespace WeightedRandomSelectorLib
         }
 
         /// <summary>
+        /// Clears the items list
+        /// </summary>
+        public void Clear()
+        {
+            _forceRecalculation = true;
+            Items.Clear();
+        }
+
+        /// <summary>
         /// Selects a single item based in the weights
         /// </summary>
         /// <returns>The value of the item</returns>
