@@ -160,7 +160,7 @@ namespace WeightedRandomSelectionLib
         /// </summary>
         /// <param name="items">A list containing all the <see cref="WeightedItem{T}" /></param>
         /// <returns>A number between 1 and the sum of all the weights of items in the list</returns>
-        protected int RollRNG(List<WeightedItem<T>> items)
+        private int RollRNG(IEnumerable<WeightedItem<T>> items)
 		{
 			// If the selector allow duplicates, there is no need to recalculate the total cumulative weight every time
 			int maxWeight = Options.HasFlag(SelectorOptions.AllowDuplicates)
@@ -193,7 +193,17 @@ namespace WeightedRandomSelectionLib
         /// <returns>A list containing the values of the items selected</returns>
         public IEnumerable<T> Select(int count)
 		{
-			Validate(count);
+			if (count <= 0)
+				throw new InvalidOperationException("Count must be > 0.");
+
+			int itemsCount = Items.Count;
+
+			if (itemsCount == 0)
+				throw new InvalidOperationException("There were no items to select from.");
+
+			if (!Options.HasFlag(SelectorOptions.AllowDuplicates) && itemsCount < count)
+				throw new InvalidOperationException("There aren't enough items in the collection to take " + count);
+			
 			Build();
 
 			var resultList = new List<T>();
@@ -223,24 +233,6 @@ namespace WeightedRandomSelectionLib
 			}
 
 			return resultList;
-		}
-
-        /// <summary>
-        ///     Validates the number input for a <see cref="SelectMulti(int)" />
-        /// </summary>
-        /// <param name="count">The number of items to select</param>
-        private void Validate(int count)
-		{
-			if (count <= 0)
-				throw new InvalidOperationException("Count must be > 0.");
-
-			int itemsCount = Items.Count;
-
-			if (itemsCount == 0)
-				throw new InvalidOperationException("There were no items to select from.");
-
-			if (!Options.HasFlag(SelectorOptions.AllowDuplicates) && itemsCount < count)
-				throw new InvalidOperationException("There aren't enough items in the collection to take " + count);
 		}
 	}
 }

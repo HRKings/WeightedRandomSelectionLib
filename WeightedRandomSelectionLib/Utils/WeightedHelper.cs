@@ -27,7 +27,6 @@ namespace WeightedRandomSelectionLib.Utils
 			return (result, totalCumulativeWeight);
 		}
 		
-				
 		public static WeightedItem<T> BinarySearch(List<WeightedItem<T>> items, int[] cumulativeWeights, int rollResult)
 		{
 			if (items.Count == 1)
