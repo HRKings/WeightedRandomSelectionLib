@@ -39,5 +39,20 @@ namespace WeightedRandomSelectionLib.Utils
 
 			return items[index];
 		}
+		
+		public static int SelectItemIndex(List<WeightedItem<T>> items, List<int> cumulativeWeight, int rollResult)
+		{
+			if (items.Count == 0)
+				throw new InvalidOperationException("There was no WeightedItem to search");
+
+			if (items.Count == 1 || cumulativeWeight.Count == 1)
+				return 0;
+
+			int index = cumulativeWeight.BinarySearch(rollResult);
+
+			index = index < 0 ? ~index : index;
+
+			return index;
+		}
 	}
 }
