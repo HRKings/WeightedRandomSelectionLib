@@ -1,4 +1,4 @@
-﻿namespace WeightedRandomSelectorLib.Interfaces
+﻿namespace WeightedRandomSelectionLib.Interfaces
 {
 	public interface IWeightedBuilder
 	{
