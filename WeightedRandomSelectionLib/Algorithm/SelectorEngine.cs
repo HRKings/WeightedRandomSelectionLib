@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using WeightedRandomSelectionLib.Structure;
+using WeightedRandomSelectionLib.Utils;
 
 namespace WeightedRandomSelectionLib.Algorithm
 {
@@ -42,25 +43,7 @@ namespace WeightedRandomSelectionLib.Algorithm
 
 			return _rng.Next(1, maxWeight);
 		}
-
-        /// <summary>
-        ///     Executes a binary search in the <paramref name="items" /> list based on the <paramref name="rollResult" />
-        /// </summary>
-        /// <param name="items">A list containing the <see cref="WeightedItem{T}" /></param>
-        /// <param name="rollResult">A int generated with the <see cref="RollRNG(List{WeightedItem{T}})" /> method</param>
-        /// <returns>The first item with the cumulative weight greater than the <paramref name="rollResult" /></returns>
-        private WeightedItem<T> BinarySearch(List<WeightedItem<T>> items, int rollResult)
-		{
-			if (items.Count == 1)
-				return items[0];
-
-			int index = Array.BinarySearch(_selector.CumulativeWeights, rollResult);
-
-			index = index < 0 ? ~index : index;
-
-			return items[index];
-		}
-
+        
         /// <summary>
         ///     Selects a item from the list based on the weights using a separated list of weights
         /// </summary>
@@ -92,7 +75,7 @@ namespace WeightedRandomSelectionLib.Algorithm
 			if (items.Count == 0)
 				throw new InvalidOperationException("There was no WeightedItem to search");
 
-			return BinarySearch(items, RollRNG(items));
+			return WeightedHelper<T>.BinarySearch(items, _selector.CumulativeWeights, RollRNG(items));
 		}
 
         /// <summary>
