@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WeightedRandomSelectionLib.Algorithm;
 using WeightedRandomSelectionLib.Structure;
+using WeightedRandomSelectionLib.Utils;
 
 namespace WeightedRandomSelectionLib
 {
@@ -160,43 +161,17 @@ namespace WeightedRandomSelectionLib
 
 			return selector.SelectMulti(count);
 		}
-
-        /// <summary>
-        ///     Calculates the cumulative weights of every <see cref="WeightedItem{T}" /> in the selector
-        ///     <para>This is used for an effective use of the BinarySearch</para>
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
-        public int[] GetCumulativeWeights(List<WeightedItem<T>> items)
-		{
-			var currentWeight = 0;
-			var index = 0;
-			var result = new int[items.Count];
-
-			foreach (var item in items)
-			{
-				var roundedWeight = (int) (item.Weight * IntegerFactor);
-				currentWeight += roundedWeight;
-				TotalCumulativeWeight += roundedWeight;
-
-				result[index] = currentWeight;
-
-				index++;
-			}
-
-			return result;
-		}
-
+        
         /// <summary>
         ///     Calculates the cumulative weights if it's needed
         /// </summary>
-        public void CalculateCumulativeWeights()
+        private void CalculateCumulativeWeights()
 		{
 			if (!_forceRecalculation)
 				return;
 
 			_forceRecalculation = false;
-			CumulativeWeights = GetCumulativeWeights(Items);
+			(CumulativeWeights, TotalCumulativeWeight) = WeightedHelper<T>.CalculateCumulativeWeights(Items, IntegerFactor);
 
 			// If the selector allow duplicates then it don't have to create a copy of the weights in list form
 			if (!Options.HasFlag(SelectorOptions.AllowDuplicates))
