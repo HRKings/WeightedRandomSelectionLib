@@ -33,14 +33,14 @@ namespace WeightedRandomSelectionLib.Tests
 		{
 			_intSelector = new WeightedRandomSelector<int>();
 
-			int[] _testPool = {expected1, expected2, expected3, expected4};
+			int[] testPool = {expected1, expected2, expected3, expected4};
 
 			_intSelector.Add(expected1, 0.5);
 			_intSelector.Add(expected2, 0.5);
 			_intSelector.Add(expected3, 0.5);
 			_intSelector.Add(expected4, 0.5);
 
-			Assert.Contains(_intSelector.Select(), _testPool);
+			Assert.Contains(_intSelector.Select(), testPool);
 		}
 
 		[Theory]
