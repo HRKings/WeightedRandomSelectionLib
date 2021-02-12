@@ -1,16 +1,16 @@
 ﻿namespace WeightedRandomSelectionLib.Structure
 {
-	public struct WeightedItem<T>
+	public readonly struct WeightedItem<T>
 	{
 		/// <summary>
 		///     The weight of the item in decimal form
 		/// </summary>
-		public double Weight { get; set; }
+		public double Weight { get; }
 
 		/// <summary>
 		///     The actual item which will be selected, here named Value
 		/// </summary>
-		public T Value { get; set; }
+		public T Value { get; }
 
 		/// <summary>
 		///     Creates a new item
