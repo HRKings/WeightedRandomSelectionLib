@@ -26,7 +26,7 @@ namespace WeightedRandomSelectionLib.Utils
 
 			return (result, totalCumulativeWeight);
 		}
-		
+
 		public static WeightedItem<T> BinarySearch(List<WeightedItem<T>> items, int[] cumulativeWeights, int rollResult)
 		{
 			if (items.Count == 1)
@@ -38,7 +38,7 @@ namespace WeightedRandomSelectionLib.Utils
 
 			return items[index];
 		}
-		
+
 		public static int SelectItemIndex(List<WeightedItem<T>> items, List<int> cumulativeWeight, int rollResult)
 		{
 			if (items.Count == 0)
@@ -53,13 +53,13 @@ namespace WeightedRandomSelectionLib.Utils
 
 			return index;
 		}
-		
+
 		public static WeightedItem<T> SelectItem(List<WeightedItem<T>> items, int[] cumulativeWeights, int rollResult)
 		{
 			if (items.Count == 0)
 				throw new InvalidOperationException("There was no WeightedItem to search");
 
-			return WeightedHelper<T>.BinarySearch(items, cumulativeWeights, rollResult);
+			return BinarySearch(items, cumulativeWeights, rollResult);
 		}
 	}
 }
