@@ -40,8 +40,14 @@ namespace WeightedRandomSelectionLib.Utils
 		/// <param name="cumulativeWeights">A list containing the cumulative weights</param>
 		/// <param name="weightToSearch">A weight to search for</param>
 		/// <returns>A weighted item in which the random number corresponds to its weight</returns>
-		public static WeightedItem<T> BinarySearch(List<WeightedItem<T>> items, int[] cumulativeWeights, int weightToSearch)
+		public static WeightedItem<T> SelectItem(List<WeightedItem<T>> items, int[] cumulativeWeights, int weightToSearch)
 		{
+			if (items.Count == 0)
+				throw new InvalidOperationException("There was no WeightedItem to search");
+
+			if (items.Count == 1 || cumulativeWeights.Length == 1)
+				return items[0];
+			
 			if (items.Count == 1)
 				return items[0];
 			
@@ -73,22 +79,6 @@ namespace WeightedRandomSelectionLib.Utils
 			index = index < 0 ? ~index : index;
 
 			return index;
-		}
-
-		/// <summary>
-		/// Selects a random weighted item based on the number provided
-		/// </summary>
-		/// <param name="items">A list containing the weighted items</param>
-		/// <param name="cumulativeWeights">An array containing the cumulative weights</param>
-		/// <param name="weightToSearch">A weight to search for</param>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException">Exception if there is no weighted item to search</exception>
-		public static WeightedItem<T> SelectItem(List<WeightedItem<T>> items, int[] cumulativeWeights, int weightToSearch)
-		{
-			if (items.Count == 0)
-				throw new InvalidOperationException("There was no WeightedItem to search");
-
-			return BinarySearch(items, cumulativeWeights, weightToSearch);
 		}
 	}
 }
