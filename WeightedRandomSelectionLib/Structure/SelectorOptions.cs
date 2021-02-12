@@ -1,5 +1,4 @@
 ﻿using System;
-using WeightedRandomSelectionLib.Algorithm;
 
 namespace WeightedRandomSelectionLib.Structure
 {
@@ -12,7 +11,7 @@ namespace WeightedRandomSelectionLib.Structure
         None = 0,
 
         /// <summary>
-        ///     Allow the same item to appear multiple times in a <see cref="SelectorEngine{T}.SelectMulti(int)" />
+        ///     Allow the same item to appear multiple times
         /// </summary>
         AllowDuplicates = 1,
 
