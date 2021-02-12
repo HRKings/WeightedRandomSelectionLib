@@ -45,27 +45,6 @@ namespace WeightedRandomSelectionLib.Algorithm
 		}
         
         /// <summary>
-        ///     Selects a item from the list based on the weights using a separated list of weights
-        /// </summary>
-        /// <param name="items">A list containing the <see cref="WeightedItem{T}" /></param>
-        /// <param name="cumulativeWeight">A list containing each of the cumulative weights of the items</param>
-        /// <returns>The index of the item selected</returns>
-        protected int ExecuteSelect(List<WeightedItem<T>> items, List<int> cumulativeWeight)
-		{
-			if (items.Count == 0)
-				throw new InvalidOperationException("There was no WeightedItem to search");
-
-			if (items.Count == 1 || cumulativeWeight.Count == 1)
-				return 0;
-
-			int index = cumulativeWeight.BinarySearch(RollRNG(items));
-
-			index = index < 0 ? ~index : index;
-
-			return index;
-		}
-
-        /// <summary>
         ///     Selects a item from the list based on the weights
         /// </summary>
         /// <param name="items">A list containing the <see cref="WeightedItem{T}" /></param>
@@ -112,7 +91,7 @@ namespace WeightedRandomSelectionLib.Algorithm
 
 				for (var i = 0; i < count; i++)
 				{
-					int index = ExecuteSelect(items, weights);
+					int index = WeightedHelper<T>.SelectItemIndex(items, weights, RollRNG(items));
 					resultList.Add(items[index].Value);
 
 					if (items.Count > 0)
