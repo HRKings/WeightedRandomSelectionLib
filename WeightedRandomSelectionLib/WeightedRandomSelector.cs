@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WeightedRandomSelectionLib.Interfaces;
 using WeightedRandomSelectionLib.Structure;
 using WeightedRandomSelectionLib.Utils;
 
@@ -10,7 +11,7 @@ namespace WeightedRandomSelectionLib
     ///     Selects items based on their percentage chances
     /// </summary>
     /// <typeparam name="T">The type of the items to select</typeparam>
-    public class WeightedRandomSelector<T>
+    public class WeightedRandomSelector<T> : IWeightedBuilder<T>, IWeightedEngine<T>
 	{
         /// <summary>
         ///     All weights are multiplied by this factor to get a integer number
@@ -82,7 +83,7 @@ namespace WeightedRandomSelectionLib
 
 			_forceRecalculation = true;
 		}
-
+        
         /// <summary>
         ///     Adds a new <see cref="WeightedItem{T}" /> to the selector
         /// </summary>
@@ -137,34 +138,11 @@ namespace WeightedRandomSelectionLib
 			_forceRecalculation = true;
 			Items.Clear();
 		}
-
-        /// <summary>
-        ///     Selects a single item based in the weights
-        /// </summary>
-        /// <returns>The value of the item</returns>
-        public T Select()
-		{
-			CalculateCumulativeWeights();
-
-			return SelectSingle();
-		}
-
-        /// <summary>
-        ///     Selects multiple items based in the weights
-        /// </summary>
-        /// <param name="count">The number of items to select</param>
-        /// <returns>A list containing the values of the items selected</returns>
-        public List<T> SelectMultiple(int count)
-		{
-			CalculateCumulativeWeights();
-
-			return SelectMulti(count);
-		}
         
         /// <summary>
         ///     Calculates the cumulative weights if it's needed
         /// </summary>
-        private void CalculateCumulativeWeights()
+        public void Build()
 		{
 			if (!_forceRecalculation)
 				return;
@@ -193,11 +171,13 @@ namespace WeightedRandomSelectionLib
 		}
         
         /// <summary>
-        ///     Selects a single item from the <see cref="WeightedRandomSelector{T}" />
+        ///     Selects a single item based in the weights
         /// </summary>
-        /// <returns>The value of the selected item</returns>
-        internal T SelectSingle()
+        /// <returns>The value of the item</returns>
+        public T Select()
 		{
+			Build();
+			
 			var items = Items;
 
 			if (items.Count == 0)
@@ -207,13 +187,14 @@ namespace WeightedRandomSelectionLib
 		}
 
         /// <summary>
-        ///     Selects multiple items from the <see cref="WeightedRandomSelector{T}" />
+        ///     Selects multiple items based in the weights
         /// </summary>
         /// <param name="count">The number of items to select</param>
-        /// <returns>A list with all the items selected</returns>
-        internal List<T> SelectMulti(int count)
+        /// <returns>A list containing the values of the items selected</returns>
+        public IEnumerable<T> Select(int count)
 		{
 			Validate(count);
+			Build();
 
 			var resultList = new List<T>();
 
