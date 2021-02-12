@@ -8,7 +8,7 @@ namespace WeightedRandomSelectionLib.Utils
 	public static class WeightedHelper<T>
 	{
 		/// <summary>
-		/// Calculates the cumulative weights of every <see cref="WeightedItem{T}" />
+		///     Calculates the cumulative weights of every <see cref="WeightedItem{T}" />
 		/// </summary>
 		/// <param name="items">A list containing all the weighted items</param>
 		/// <param name="integerFactor">The factor to multiply the weights to turn them into integers</param>
@@ -34,23 +34,24 @@ namespace WeightedRandomSelectionLib.Utils
 		}
 
 		/// <summary>
-		/// Searches for the provided weight and returns the of the weighted item with the closest weight
+		///     Searches for the provided weight and returns the of the weighted item with the closest weight
 		/// </summary>
 		/// <param name="items">An array containing the weighted items</param>
 		/// <param name="cumulativeWeights">A list containing the cumulative weights</param>
 		/// <param name="weightToSearch">A weight to search for</param>
 		/// <returns>A weighted item in which the random number corresponds to its weight</returns>
-		public static WeightedItem<T> SelectItem(List<WeightedItem<T>> items, int[] cumulativeWeights, int weightToSearch)
+		public static WeightedItem<T> SelectItem(List<WeightedItem<T>> items, int[] cumulativeWeights,
+			int weightToSearch)
 		{
 			if (items.Count == 0)
 				throw new InvalidOperationException("There was no WeightedItem to search");
 
 			if (items.Count == 1 || cumulativeWeights.Length == 1)
 				return items[0];
-			
+
 			if (items.Count == 1)
 				return items[0];
-			
+
 			int index = Array.BinarySearch(cumulativeWeights, weightToSearch);
 
 			index = index < 0 ? ~index : index;
@@ -59,7 +60,7 @@ namespace WeightedRandomSelectionLib.Utils
 		}
 
 		/// <summary>
-		/// Searches for the provided weight and returns the index of the weighted item with the closest weight
+		///     Searches for the provided weight and returns the index of the weighted item with the closest weight
 		/// </summary>
 		/// <param name="items">A list containing the weighted items</param>
 		/// <param name="cumulativeWeights">A list containing the cumulative weights</param>

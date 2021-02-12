@@ -15,8 +15,7 @@ namespace WeightedRandomSelectionLib
 	{
 		/// <summary>
 		///     All weights are multiplied by this factor to get a integer number
-		///     <para>All numbers after this decimal place will be ignored</para>
-		///     <para>If this number is set too hight, might occur performance loss</para>
+		///     <para>If this number is set too high, might occur performance loss</para>
 		/// </summary>
 		private readonly int _integerFactor;
 
@@ -40,7 +39,7 @@ namespace WeightedRandomSelectionLib
 		///     Creates a instance of the selector with the desired options
 		/// </summary>
 		/// <param name="options"><see cref="SelectorOptions" /> flags for the selector</param>
-		/// <param name="decimalPlaces">The maximum allowed decimal places in the items weights</param>
+		/// <param name="decimalPlaces">The maximum allowed decimal places in the items weights. All numbers after this decimal place will be ignored</param>
 		public WeightedRandomSelector(
 			SelectorOptions options = SelectorOptions.AllowDuplicates | SelectorOptions.IgnoreZeroWeight,
 			int decimalPlaces = 2)
@@ -66,7 +65,7 @@ namespace WeightedRandomSelectionLib
 		/// </summary>
 		/// <param name="items">A list of <see cref="WeightedItem{T}" /></param>
 		/// <param name="options"><see cref="SelectorOptions" /> flags for the selector</param>
-		/// <param name="decimalPlaces">The maximum allowed decimal places in the items weights</param>
+		/// <param name="decimalPlaces">The maximum allowed decimal places in the items weights. All numbers after this decimal place will be ignored</param>
 		public WeightedRandomSelector(List<WeightedItem<T>> items,
 			SelectorOptions options = SelectorOptions.AllowDuplicates | SelectorOptions.IgnoreZeroWeight,
 			int decimalPlaces = 2) : this(options, decimalPlaces)
@@ -141,7 +140,7 @@ namespace WeightedRandomSelectionLib
 			(_cumulativeWeights, _totalCumulativeWeight) =
 				WeightedHelper<T>.CalculateCumulativeWeights(_items, _integerFactor);
 
-			// If the selector allow duplicates then it don't have to create a copy of the weights in list form
+			// If the selector don't allow duplicates then it have to create a copy of the weights in list form
 			if (!_options.HasFlag(SelectorOptions.AllowDuplicates))
 				_cumulativeWeightsList = _cumulativeWeights.ToList();
 		}
@@ -152,14 +151,12 @@ namespace WeightedRandomSelectionLib
 		/// <returns>The value of the item</returns>
 		public T Select()
 		{
-			Build();
-
-			var items = _items;
-
-			if (items.Count == 0)
+			if (_items.Count == 0)
 				throw new InvalidOperationException("There was no items to select from");
 
-			return WeightedHelper<T>.SelectItem(items, _cumulativeWeights, GenerateRandomWeight(items)).Value;
+			Build();
+
+			return WeightedHelper<T>.SelectItem(_items, _cumulativeWeights, GenerateRandomWeight(_items)).Value;
 		}
 
 		/// <summary>
@@ -172,44 +169,36 @@ namespace WeightedRandomSelectionLib
 			if (count <= 0)
 				throw new InvalidOperationException("Count must be > 0.");
 
-			int itemsCount = _items.Count;
-
-			if (itemsCount == 0)
+			if (_items.Count == 0)
 				throw new InvalidOperationException("There were no items to select from.");
 
-			if (!_options.HasFlag(SelectorOptions.AllowDuplicates) && itemsCount < count)
+			if (!_options.HasFlag(SelectorOptions.AllowDuplicates) && _items.Count < count)
 				throw new InvalidOperationException("There aren't enough items in the collection to take " + count);
 
 			Build();
 
-			var resultList = new List<T>();
-
-			// A implementation of the select multiple code that uses O(log(n)) even when removing items from the list
-			if (!_options.HasFlag(SelectorOptions.AllowDuplicates))
-			{
-				// A shallow copy of the lists containing the items and the cumulative weights, since we will be removing items of the list we want to conserve the original ones
-				var items = new List<WeightedItem<T>>(_items);
-				var weights = new List<int>(_cumulativeWeightsList);
-
+			if (_options.HasFlag(SelectorOptions.AllowDuplicates))
 				for (var i = 0; i < count; i++)
-				{
-					int index = WeightedHelper<T>.SelectItemIndex(items, weights, GenerateRandomWeight(items));
-					resultList.Add(items[index].Value);
+					yield return WeightedHelper<T>
+						.SelectItem(_items, _cumulativeWeights, GenerateRandomWeight(_items)).Value;
 
-					if (items.Count > 0)
-						items.RemoveAt(index);
+			// The code bellow can perform under O(log(n)) even when removing items from the list
+			// A shallow copy of the lists containing the items and the cumulative weights, since we will be removing items of the list we want to conserve the original ones
+			var items = new List<WeightedItem<T>>(_items);
+			var weights = new List<int>(_cumulativeWeightsList);
 
-					if (weights.Count > 0)
-						weights.RemoveAt(index);
-				}
-			}
-			else
+			for (var i = 0; i < count; i++)
 			{
-				for (var i = 0; i < count; i++)
-					resultList.Add(WeightedHelper<T>.SelectItem(_items, _cumulativeWeights, GenerateRandomWeight(_items)).Value);
-			}
+				int index = WeightedHelper<T>.SelectItemIndex(items, weights, GenerateRandomWeight(items));
 
-			return resultList;
+				if (items.Count > 0)
+					items.RemoveAt(index);
+
+				if (weights.Count > 0)
+					weights.RemoveAt(index);
+
+				yield return items[index].Value;
+			}
 		}
 
 		/// <summary>
