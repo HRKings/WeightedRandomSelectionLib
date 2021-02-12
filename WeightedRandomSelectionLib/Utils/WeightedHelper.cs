@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WeightedRandomSelectionLib.Structure;
 
@@ -24,6 +25,19 @@ namespace WeightedRandomSelectionLib.Utils
 			}
 
 			return (result, totalCumulativeWeight);
+		}
+		
+				
+		public static WeightedItem<T> BinarySearch(List<WeightedItem<T>> items, int[] cumulativeWeights, int rollResult)
+		{
+			if (items.Count == 1)
+				return items[0];
+
+			int index = Array.BinarySearch(cumulativeWeights, rollResult);
+
+			index = index < 0 ? ~index : index;
+
+			return items[index];
 		}
 	}
 }
