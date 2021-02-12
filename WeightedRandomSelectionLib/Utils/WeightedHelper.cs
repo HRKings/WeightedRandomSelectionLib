@@ -55,11 +55,6 @@ namespace WeightedRandomSelectionLib.Utils
 			return index;
 		}
 		
-		/// <summary>
-		///     Selects a item from the list based on the weights
-		/// </summary>
-		/// <param name="items">A list containing the <see cref="WeightedItem{T}" /></param>
-		/// <returns>The selected item</returns>
 		public static WeightedItem<T> SelectItem(List<WeightedItem<T>> items, int[] cumulativeWeights, int rollResult)
 		{
 			if (items.Count == 0)
